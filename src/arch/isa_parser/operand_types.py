@@ -114,7 +114,7 @@ class Operand(object):
     dst_reg_constructor = '\n\tsetDestRegIdx(_numDestRegs++, %s);'
 
     def regId(self):
-        return f'RegId({self.reg_class}, {self.reg_spec})'
+        return f'{self.reg_class}[{self.reg_spec}]'
 
     def srcRegId(self):
         return self.regId()
@@ -203,7 +203,7 @@ class RegOperand(Operand):
 
         if self.is_dest:
             c_dest = self.dst_reg_constructor % self.destRegId()
-            c_dest += f'\n\t_numTypedDestRegs[{self.reg_class}]++;'
+            c_dest += f'\n\t_numTypedDestRegs[{self.reg_class}.type()]++;'
 
         return c_src + c_dest
 
@@ -243,22 +243,22 @@ class RegOperandDesc(OperandDesc):
 
 class IntRegOperandDesc(RegOperandDesc):
     def __init__(self, *args, **kwargs):
-        super().__init__('IntRegClass', 'RegVal', *args, **kwargs)
+        super().__init__('intRegClass', 'RegVal', *args, **kwargs)
 
 class FloatRegOperandDesc(RegOperandDesc):
     def __init__(self, *args, **kwargs):
-        super().__init__('FloatRegClass', 'RegVal', *args, **kwargs)
+        super().__init__('floatRegClass', 'RegVal', *args, **kwargs)
 
 class CCRegOperandDesc(RegOperandDesc):
     def __init__(self, *args, **kwargs):
-        super().__init__('CCRegClass', 'RegVal', *args, **kwargs)
+        super().__init__('ccRegClass', 'RegVal', *args, **kwargs)
 
 class VecElemOperandDesc(RegOperandDesc):
     def __init__(self, *args, **kwargs):
-        super().__init__('VecElemClass', 'RegVal', *args, **kwargs)
+        super().__init__('vecElemClass', 'RegVal', *args, **kwargs)
 
 class VecRegOperand(RegOperand):
-    reg_class = 'VecRegClass'
+    reg_class = 'vecRegClass'
 
     def __init__(self, parser, full_name, ext, is_src, is_dest):
         super().__init__(parser, full_name, ext, is_src, is_dest)
@@ -369,10 +369,10 @@ class VecRegOperand(RegOperand):
 
 class VecRegOperandDesc(RegOperandDesc):
     def __init__(self, *args, **kwargs):
-        super().__init__('VecRegClass', 'VecReg', *args, **kwargs)
+        super().__init__('vecRegClass', 'VecReg', *args, **kwargs)
 
 class VecPredRegOperand(RegOperand):
-    reg_class = 'VecPredRegClass'
+    reg_class = 'vecPredRegClass'
 
     def makeDecl(self):
         return ''
@@ -414,10 +414,10 @@ class VecPredRegOperand(RegOperand):
 
 class VecPredRegOperandDesc(RegOperandDesc):
     def __init__(self, *args, **kwargs):
-        super().__init__('VecPredRegClass', 'VecPredReg', *args, **kwargs)
+        super().__init__('vecPredRegClass', 'VecPredReg', *args, **kwargs)
 
 class ControlRegOperand(Operand):
-    reg_class = 'MiscRegClass'
+    reg_class = 'miscRegClass'
 
     def isReg(self):
         return 1
@@ -460,7 +460,7 @@ class ControlRegOperand(Operand):
 
 class ControlRegOperandDesc(RegOperandDesc):
     def __init__(self, *args, **kwargs):
-        super().__init__('MiscRegClass', 'ControlReg', *args, **kwargs)
+        super().__init__('miscRegClass', 'ControlReg', *args, **kwargs)
 
 class MemOperand(Operand):
     def isMem(self):
