@@ -110,6 +110,7 @@ BaseCache::BaseCache(const BaseCacheParams &p, unsigned blk_size)
       missCount(p.max_miss_count),
       addrRanges(p.addr_ranges.begin(), p.addr_ranges.end()),
       system(p.system),
+      isSparse(p.isSparse),
       stats(*this)
 {
     // the MSHR queue has no reserve entries as we check the MSHR

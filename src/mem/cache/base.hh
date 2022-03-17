@@ -981,6 +981,9 @@ class BaseCache : public ClockedObject
      * Normally this is all possible memory addresses. */
     const AddrRangeList addrRanges;
 
+    /** Whether sparse cache lines are enabled. */
+    bool isSparse;
+
   public:
     /** System we are currently operating in. */
     System *system;

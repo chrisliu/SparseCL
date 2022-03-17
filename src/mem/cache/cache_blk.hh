@@ -46,6 +46,7 @@
 #ifndef __MEM_CACHE_CACHE_BLK_HH__
 #define __MEM_CACHE_CACHE_BLK_HH__
 
+#include <bitset>
 #include <cassert>
 #include <cstdint>
 #include <iosfwd>
@@ -151,6 +152,9 @@ class CacheBlk : public TaggedEntry
      * on the block since the last store. */
     std::list<Lock> lockList;
 
+    /** Sparsity mask for sparse cache lines. */
+    std::bitset<64> sparsityMask;
+
   public:
     CacheBlk()
     {
@@ -209,6 +213,7 @@ class CacheBlk : public TaggedEntry
         setRefCount(0);
         setSrcRequestorId(Request::invldRequestorId);
         lockList.clear();
+        sparsityMask.reset();
     }
 
     /**
@@ -449,6 +454,14 @@ class CacheBlk : public TaggedEntry
             clearLoadLocks(req);
             return true;
         }
+    }
+
+    bool isInBlk(const Addr offset, const int bitSize) {
+        return sparsityMask.test(offset / bitSize);
+    }
+
+    void setInBlk(const Addr offset, const int bitSize) {
+        sparsityMask.set(offset / bitSize);
     }
 
   protected:
