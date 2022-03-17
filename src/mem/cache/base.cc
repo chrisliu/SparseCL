@@ -1410,7 +1410,6 @@ BaseCache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
     incMissCount(pkt);
 
     lat = calculateAccessLatency(blk, pkt->headerDelay, tag_latency);
-
     if (!blk && pkt->isLLSC() && pkt->isWrite()) {
         // complete miss on store conditional... just give up now
         pkt->req->setExtraData(0);
@@ -1445,15 +1444,13 @@ BaseCache::handleFill(PacketPtr pkt, CacheBlk *blk, PacketList &writebacks,
     // When handling a fill, we should have no writes to this line.
     assert(addr == pkt->getBlockAddr(blkSize));
     assert(!writeBuffer.findMatch(addr, is_secure));
-
     if (!blk) {
         // better have read new data...
         assert(pkt->hasData() || pkt->cmd == MemCmd::InvalidateResp);
-
+                                                                                             
         // need to do a replacement if allocating, otherwise we stick
         // with the temporary storage
         blk = allocate ? allocateBlock(pkt, writebacks) : nullptr;
-
         if (!blk) {
             // No replaceable block or a mostly exclusive
             // cache... just use temporary storage to complete the

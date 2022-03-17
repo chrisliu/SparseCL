@@ -127,6 +127,10 @@ class BaseSetAssoc : public BaseTags
     CacheBlk* accessBlock(const PacketPtr pkt, Cycles &lat) override
     {
         CacheBlk *blk = findBlock(pkt->getAddr(), pkt->isSecure());
+        
+        if (blk != nullptr && blk->isSparse) {
+            blk = blk->isInBlock(pkt->getOffset(blk->getSize()), 8) ? blk : nullptr
+        }
 
         // Access all tags in parallel, hence one in each way.  The data side
         // either accesses all blocks in parallel, or one block sequentially on
