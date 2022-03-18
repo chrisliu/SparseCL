@@ -456,12 +456,21 @@ class CacheBlk : public TaggedEntry
         }
     }
 
-    bool isInBlk(const Addr offset, const int bitSize) {
-        return sparsityMask.test(offset / bitSize);
+    bool isInBlk(const Addr offset, const int numBytes, const int bitSize) {
+        int start = offset / bitSize;
+        int end = start + numBytes / bitSize;
+        for (int i = start; i < end; i++) {
+            if (sparsityMask.test(i) == 0) return false;
+        }
+        return true;
     }
 
-    void setInBlk(const Addr offset, const int bitSize) {
-        sparsityMask.set(offset / bitSize);
+    void setInBlk(const Addr offset, const int numBytes, const int bitSize) {
+        int start = offset / bitSize;
+        int end = start + numBytes / bitSize;
+        for (int i = start; i < end; i++) {
+            sparsityMask.set(i);
+        }
     }
 
   protected:

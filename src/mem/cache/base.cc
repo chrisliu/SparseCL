@@ -1167,8 +1167,11 @@ BaseCache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
     blk = tags->accessBlock(pkt, tag_latency);
 
     if (blk != nullptr && isSparse) {
-        DPRINTF(Cache, "Sparse cache miss. Offset - %s", pkt->getOffset(blkSize));
-        blk = blk->isInBlk(pkt->getOffset(blkSize), 8) ? blk : nullptr;
+        DPRINTF(Cache, "Sparse cache miss. Offset - %s. Size - %s",
+            pkt->getOffset(blkSize),
+            pkt->getSize());
+        blk = blk->isInBlk(pkt->getOffset(blkSize), pkt->getSize(), 1)
+          ? blk : nullptr;
         stats.sparsityAccess++;
         if(blk == nullptr) {
             stats.sparsityMisses++;
@@ -1533,8 +1536,9 @@ BaseCache::handleFill(PacketPtr pkt, CacheBlk *blk, PacketList &writebacks,
 
     if (blk != nullptr && isSparse) {
         stats.sparsityMemoryBandwidth += pkt->getSize();
-        blk->setInBlk(pkt->getOffset(blkSize), 8);
-        DPRINTF(Cache, "Sparsity bit set. Offset: %s", pkt->getOffset(blkSize));
+        blk->setInBlk(pkt->getOffset(blkSize), pkt->getSize(), 1);
+        DPRINTF(Cache, "Sparsity bit set. Offset: %s. Size: %s",
+            pkt->getOffset(blkSize), pkt->getSize());
     }
 
 
@@ -2215,7 +2219,7 @@ BaseCache::CacheStats::CacheStats(BaseCache &c)
              "number of sparsity misses"),
     ADD_STAT(sparsityAccess, statistics::units::Count::get(),
              "number of sparsity accesses"),
-    ADD_STAT(sparsityMissRate, statistics::Ratio::get(),
+    ADD_STAT(sparsityMissRate, statistics::units::Ratio::get(),
              "Sparsity miss rate for overall access"),
     ADD_STAT(sparsityMemoryBandwidth, statistics::units::Count::get(),
              "Memory bandwidth for sparsity"),
