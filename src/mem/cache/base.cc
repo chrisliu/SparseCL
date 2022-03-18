@@ -1164,7 +1164,11 @@ BaseCache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
 
     // Access block in the tags
     Cycles tag_latency(0);
-    blk = tags->accessBlock(pkt, tag_latency, isSparse, blkSize);
+    blk = tags->accessBlock(pkt, tag_latency);
+
+    if (blk != nullptr && isSparse) {
+        blk = blk->isInBlk(pkt->getOffset(blkSize), 8) ? blk : nullptr
+    }
 
     DPRINTF(Cache, "%s for %s %s\n", __func__, pkt->print(),
             blk ? "hit " + blk->print() : "miss");
