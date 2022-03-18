@@ -1147,6 +1147,18 @@ class BaseCache : public ClockedObject
 
         /** Per-command statistics */
         std::vector<std::unique_ptr<CacheCmdStats>> cmd;
+
+        /** For sparsity miss **/
+        statistics::Scalar sparsityMisses;
+
+        /** For sparsity checks / accesses **/
+        statistics::Scalar sparsityAccess;
+
+        /** For sparsity miss rate **/
+        statistics::Formula sparsityMissRate;
+
+        /** For sparsity memory bandwidth **/
+        statistics::Scalar sparsityMemoryBandwidth;
     } stats;
 
     /** Registers probes. */

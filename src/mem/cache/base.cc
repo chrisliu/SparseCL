@@ -1169,6 +1169,10 @@ BaseCache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
     if (blk != nullptr && isSparse) {
         DPRINTF(Cache, "Sparse cache miss. Offset - %s", pkt->getOffset(blkSize));
         blk = blk->isInBlk(pkt->getOffset(blkSize), 8) ? blk : nullptr;
+        stats.sparsityAccess++;
+        if(blk == nullptr) {
+            stats.sparsityMisses++;
+        }   
     }
 
     DPRINTF(Cache, "%s for %s %s\n", __func__, pkt->print(),
@@ -1528,6 +1532,7 @@ BaseCache::handleFill(PacketPtr pkt, CacheBlk *blk, PacketList &writebacks,
                       pkt->payloadDelay);
 
     if (blk != nullptr && isSparse) {
+        stats.sparsityMemoryBandwidth += pkt->getSize();
         blk->setInBlk(pkt->getOffset(blkSize), 8);
         DPRINTF(Cache, "Sparsity bit set. Offset: %s", pkt->getOffset(blkSize));
     }
@@ -2206,6 +2211,14 @@ BaseCache::CacheStats::CacheStats(BaseCache &c)
              "number of data expansions"),
     ADD_STAT(dataContractions, statistics::units::Count::get(),
              "number of data contractions"),
+    ADD_STAT(sparsityMisses, statistics::units::Count::get(),
+             "number of sparsity misses"),
+    ADD_STAT(sparsityAccess, statistics::units::Count::get(),
+             "number of sparsity accesses"),
+    ADD_STAT(sparsityMissRate, statistics::Ratio::get(),
+             "Sparsity miss rate for overall access"),
+    ADD_STAT(sparsityMemoryBandwidth, statistics::units::Count::get(),
+             "Memory bandwidth for sparsity"),
     cmd(MemCmd::NUM_MEM_CMDS)
 {
     for (int idx = 0; idx < MemCmd::NUM_MEM_CMDS; ++idx)
@@ -2435,6 +2448,14 @@ BaseCache::CacheStats::regStats()
 
     dataExpansions.flags(nozero | nonan);
     dataContractions.flags(nozero | nonan);
+
+    sparsityMisses.flags(total | nozero | nonan);
+    sparsityAccess.flags(total | nozero | nonan);
+    
+    sparsityMissRate.flags(total | nozero | nonan);
+    sparsityMissRate = sparsityMisses / sparsityAccess;
+
+    sparsityMemoryBandwidth.flags(total | nozero | nonan);
 }
 
 void
