@@ -129,7 +129,7 @@ class BaseSetAssoc : public BaseTags
         CacheBlk *blk = findBlock(pkt->getAddr(), pkt->isSecure());
         
         if (blk != nullptr && isSparse) {
-            blk = blk->isInBlock(pkt->getOffset(blk_size), 8) ? blk : nullptr;
+            blk = blk->isInBlk(pkt->getOffset(blk_size), 8) ? blk : nullptr;
             // DPRINTF("Sparsity bit checked. Offset: %s", pkt->getOffset(blk_size));
         }
 
