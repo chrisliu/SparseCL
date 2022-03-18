@@ -124,7 +124,7 @@ class BaseSetAssoc : public BaseTags
      * @param lat The latency of the tag lookup.
      * @return Pointer to the cache block if found.
      */
-    CacheBlk* accessBlock(const PacketPtr pkt, Cycles &lat, bool isSparse, unsigned blk_size) override
+    CacheBlk* accessBlock(const PacketPtr pkt, Cycles &lat, bool isSparse, unsigned blk_size)
     {
         CacheBlk *blk = findBlock(pkt->getAddr(), pkt->isSecure());
         
