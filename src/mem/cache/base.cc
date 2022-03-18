@@ -1523,8 +1523,8 @@ BaseCache::handleFill(PacketPtr pkt, CacheBlk *blk, PacketList &writebacks,
                       pkt->payloadDelay);
 
     if (blk != nullptr && isSparse) {
-        blk->setInBlk(pkt->getOffset(blkSize), 8)
-        DPRINTF("Sparsity bit set. Offset: %s", pkt->getOffset(blkSize))
+        blk->setInBlk(pkt->getOffset(blkSize), 8);
+        DPRINTF("Sparsity bit set. Offset: %s", pkt->getOffset(blkSize));
     }
 
 

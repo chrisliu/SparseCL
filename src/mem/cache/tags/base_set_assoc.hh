@@ -129,8 +129,8 @@ class BaseSetAssoc : public BaseTags
         CacheBlk *blk = findBlock(pkt->getAddr(), pkt->isSecure());
         
         if (blk != nullptr && isSparse) {
-            blk = blk->isInBlock(pkt->getOffset(blk_size), 8) ? blk : nullptr
-            DPRINTF("Sparsity bit checked. Offset: %s", pkt->getOffset(blk_size))
+            blk = blk->isInBlock(pkt->getOffset(blk_size), 8) ? blk : nullptr;
+            DPRINTF("Sparsity bit checked. Offset: %s", pkt->getOffset(blk_size));
         }
 
         // Access all tags in parallel, hence one in each way.  The data side
