@@ -151,7 +151,7 @@ class BaseCache(ClockedObject):
     # in the current cache. Typically, this would be enabled in the
     # data cache.
     write_allocator = Param.WriteAllocator(NULL, "Write allocator")
-    isSparse = Param.Bool(False, "Sparse cache lines")
+    isSparse = Param.Bool(True, "Sparse cache lines")
 
 class Cache(BaseCache):
     type = 'Cache'
