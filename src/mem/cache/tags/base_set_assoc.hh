@@ -124,12 +124,13 @@ class BaseSetAssoc : public BaseTags
      * @param lat The latency of the tag lookup.
      * @return Pointer to the cache block if found.
      */
-    CacheBlk* accessBlock(const PacketPtr pkt, Cycles &lat) override
+    CacheBlk* accessBlock(const PacketPtr pkt, Cycles &lat, bool isSparse) override
     {
         CacheBlk *blk = findBlock(pkt->getAddr(), pkt->isSecure());
         
-        if (blk != nullptr && blk->isSparse) {
+        if (blk != nullptr && isSparse) {
             blk = blk->isInBlock(pkt->getOffset(blk->getSize()), 8) ? blk : nullptr
+            DPRINTF("Sparsity bit checked. Offset: %s", pkt->getOffset(blk->getSize()))
         }
 
         // Access all tags in parallel, hence one in each way.  The data side

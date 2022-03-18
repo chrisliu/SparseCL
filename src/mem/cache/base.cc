@@ -1164,7 +1164,7 @@ BaseCache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
 
     // Access block in the tags
     Cycles tag_latency(0);
-    blk = tags->accessBlock(pkt, tag_latency);
+    blk = tags->accessBlock(pkt, tag_latency, isSparse);
 
     DPRINTF(Cache, "%s for %s %s\n", __func__, pkt->print(),
             blk ? "hit " + blk->print() : "miss");
@@ -1521,6 +1521,12 @@ BaseCache::handleFill(PacketPtr pkt, CacheBlk *blk, PacketList &writebacks,
     // The block will be ready when the payload arrives and the fill is done
     blk->setWhenReady(clockEdge(fillLatency) + pkt->headerDelay +
                       pkt->payloadDelay);
+
+    if (blk != nullptr && isSparse) {
+        blk->setInBlk(pkt->getOffset(blk->getSize()), 8)
+        DPRINTF("Sparsity bit set. Offset: %s", pkt->getOffset(blk->getSize()))
+    }
+
 
     return blk;
 }
