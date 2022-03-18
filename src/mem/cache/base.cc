@@ -1167,7 +1167,7 @@ BaseCache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
     blk = tags->accessBlock(pkt, tag_latency);
 
     if (blk != nullptr && isSparse) {
-        DPRINT(Cache, "Sparse cache miss. Offset - %s", pkt->getOffset(blkSize))
+        DPRINTF(Cache, "Sparse cache miss. Offset - %s", pkt->getOffset(blkSize))
         blk = blk->isInBlk(pkt->getOffset(blkSize), 8) ? blk : nullptr;
     }
 
