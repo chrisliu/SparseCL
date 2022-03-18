@@ -1532,7 +1532,7 @@ BaseCache::handleFill(PacketPtr pkt, CacheBlk *blk, PacketList &writebacks,
                       pkt->payloadDelay);
 
     if (blk != nullptr && isSparse) {
-        stats.sparsityMemoryBandwidth += pkt->getSize(); ssh ajain@tetracosa.cs.ucla.edu
+        stats.sparsityMemoryBandwidth += pkt->getSize();
         blk->setInBlk(pkt->getOffset(blkSize), 8);
         DPRINTF(Cache, "Sparsity bit set. Offset: %s", pkt->getOffset(blkSize));
     }
