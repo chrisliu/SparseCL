@@ -459,7 +459,7 @@ class CacheBlk : public TaggedEntry
         }
     }
 
-    bool isInBlk(const Addr offset, const int numBytes, const int bitSize) {
+    bool isInBlk(const int offset, const int numBytes, const int bitSize) {
         int start = offset / bitSize;
         int end = start + numBytes / bitSize;
         for (int i = start; i < end; i++) {
@@ -468,7 +468,7 @@ class CacheBlk : public TaggedEntry
         return true;
     }
 
-    void setInBlk(const Addr offset, const int numBytes, const int bitSize) {
+    void setInBlk(const int offset, const int numBytes, const int bitSize) {
         int start = offset / bitSize;
         int end = start + numBytes / bitSize;
         // assert(start >= 0 && start <= 63);
