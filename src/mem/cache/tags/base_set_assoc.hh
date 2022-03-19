@@ -128,7 +128,7 @@ class BaseSetAssoc : public BaseTags
     {
         CacheBlk *blk = findBlock(pkt->getAddr(), pkt->isSecure());
         
-        if (!blk->isInBlk(pkt->getOffset(64), pkt->getSize(), 1)) {
+        if (blk && !blk->isInBlk(pkt->getOffset(64), pkt->getSize(), 1)) {
             blk = nullptr;
             // stats.sparsityMisses++;
         }
