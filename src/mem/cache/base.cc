@@ -1168,25 +1168,21 @@ BaseCache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
     blk = tags->accessBlock(pkt, tag_latency);
 
     if (blk != nullptr && isSparse) {
-    // //     DPRINTF(Cache, "Sparse cache miss. Offset - %s. Size - %s, blockSize - %s ",
-    // //         pkt->getOffset(blkSize),
-    // //         pkt->getSize(),
-    // //         blkSize);
-    //     DPRINTF(Cache, "start: %s, end: %s, mask_size: %s", pkt->getOffset(blkSize), pkt->getOffset(blkSize) + pkt->getSize(), blk->sparsityMask.size());
-    //     // blk = blk->isInBlk(pkt->getOffset(blkSize), pkt->getSize(), 1)
-    //     //   ? blk : nullptr;
-    // //     stats.sparsityAccess++;
-    // //     if(blk == nullptr) {
-    //         // stats.sparsityMisses++;
-    // //     }   
-    //     if (!blk->isInBlk(pkt->getOffset(blkSize), pkt->getSize(), 1)) {
-    //         stats.sparsityMisses++;
-    //     }
-
+        stats.sparsityAccess++;
         if (!blk->isInBlk(pkt->getOffset(blkSize), pkt->getSize(), 1)) {
-            blk->invalidate();
-            blk = nullptr;
+            stats.sparsityMisses++;
         }
+        DPRINTF(Cache, "start: %s, end: %s, mask_size: %s", pkt->getOffset(blkSize), pkt->getOffset(blkSize) + pkt->getSize(), blk->sparsityMask.size());
+    //     DPRINTF(Cache, "Sparse cache miss. Offset - %s. Size - %s, blockSize - %s ",
+    //         pkt->getOffset(blkSize),
+    //         pkt->getSize(),
+    //         blkSize);
+        // blk = blk->isInBlk(pkt->getOffset(blkSize), pkt->getSize(), 1)
+        //   ? blk : nullptr;
+    //     stats.sparsityAccess++;
+    //     if(blk == nullptr) {
+            // stats.sparsityMisses++;
+    //     }   
     }
 
     DPRINTF(Cache, "%s for %s %s\n", __func__, pkt->print(),
@@ -1545,7 +1541,7 @@ BaseCache::handleFill(PacketPtr pkt, CacheBlk *blk, PacketList &writebacks,
     blk->setWhenReady(clockEdge(fillLatency) + pkt->headerDelay +
                       pkt->payloadDelay);
 
-    if (blk && isSparse) {
+    if (isSparse) {
         stats.sparsityMemoryBandwidth += pkt->getSize();
         DPRINTF(Cache, "Sparsity bit set. Offset: %s. Size: %s, blkSize: %s ",
             pkt->getOffset(blkSize), pkt->getSize(), blkSize);

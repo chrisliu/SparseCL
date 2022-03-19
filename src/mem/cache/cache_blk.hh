@@ -468,14 +468,17 @@ class CacheBlk : public TaggedEntry
         return true;
     }
 
-    void setInBlk(const int offset, const int numBytes, const int bitSize) {
+    int setInBlk(const int offset, const int numBytes, const int bitSize) {
         int start = offset / bitSize;
         int end = start + numBytes / bitSize;
-        // assert(start >= 0 && start <= 63);
-        // assert(end >= 0 && end <= 63);
+        int totalBitSet = 0;
         for (int i = start; i < end; i++) {
+            if (!sparsityMask.test(i)) {
+                totalBitSet += 1;
+            }
             sparsityMask.set(i);
         }
+        return totalBitSet * bitSize;
     }
 
   protected:
