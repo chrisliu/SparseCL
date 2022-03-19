@@ -1541,12 +1541,12 @@ BaseCache::handleFill(PacketPtr pkt, CacheBlk *blk, PacketList &writebacks,
     blk->setWhenReady(clockEdge(fillLatency) + pkt->headerDelay +
                       pkt->payloadDelay);
 
+    stats.normalMemoryBandwidth += blkSize
     if (isSparse) {
-        stats.sparsityMemoryBandwidth += pkt->getSize();
         DPRINTF(Cache, "Sparsity bit set. Offset: %s. Size: %s, blkSize: %s ",
             pkt->getOffset(blkSize), pkt->getSize(), blkSize);
         DPRINTF(Cache, "start: %s, end: %s, mask_size: %s", pkt->getOffset(blkSize), pkt->getOffset(blkSize) + pkt->getSize(), blk->sparsityMask.size());
-        blk->setInBlk(pkt->getOffset(blkSize), pkt->getSize(), 1);
+        stats.sparsityMemoryBandwidth += blk->setInBlk(pkt->getOffset(blkSize), pkt->getSize(), 1);
     }
 
 
@@ -2231,6 +2231,8 @@ BaseCache::CacheStats::CacheStats(BaseCache &c)
              "Sparsity miss rate for overall access"),
     ADD_STAT(sparsityMemoryBandwidth, statistics::units::Count::get(),
              "Memory bandwidth for sparsity"),
+    ADD_STAT(normalMemoryBandwidth, statistics::units::Count::get(),
+             "Memory bandwidth for normal cache"),
     cmd(MemCmd::NUM_MEM_CMDS)
 {
     for (int idx = 0; idx < MemCmd::NUM_MEM_CMDS; ++idx)
@@ -2468,6 +2470,7 @@ BaseCache::CacheStats::regStats()
     sparsityMissRate = sparsityMisses / sparsityAccess;
 
     sparsityMemoryBandwidth.flags(total | nozero | nonan);
+    normalMemoryBandwidth.flags(total | nozero | nonan);
 }
 
 void
