@@ -42,7 +42,6 @@ Source('write_queue.cc')
 Source('write_queue_entry.cc')
 
 DebugFlag('Cache')
-DebugFlag('CacheBlk')
 DebugFlag('CacheComp')
 DebugFlag('CachePort')
 DebugFlag('CacheRepl')

@@ -1171,6 +1171,7 @@ BaseCache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
             pkt->getOffset(blkSize),
             pkt->getSize(),
             blkSize);
+        DPRINTF(Cache, "start: %s, end: %s, mask_size: %s", pkt->getOffset(blkSize), pkt->getOffset(blkSize) + pkt->getSize(), blk->sparsityMask.size());
         blk = blk->isInBlk(pkt->getOffset(blkSize), pkt->getSize(), 1)
           ? blk : nullptr;
         stats.sparsityAccess++;
@@ -1539,6 +1540,7 @@ BaseCache::handleFill(PacketPtr pkt, CacheBlk *blk, PacketList &writebacks,
         stats.sparsityMemoryBandwidth += pkt->getSize();
         DPRINTF(Cache, "Sparsity bit set. Offset: %s. Size: %s, blkSize: %s ",
             pkt->getOffset(blkSize), pkt->getSize(), blkSize);
+        DPRINTF(Cache, "start: %s, end: %s, mask_size: %s", pkt->getOffset(blkSize), pkt->getOffset(blkSize) + pkt->getSize(), blk->sparsityMask.size());
         blk->setInBlk(pkt->getOffset(blkSize), pkt->getSize(), 1);
     }
 
