@@ -60,6 +60,7 @@
 #include "mem/request.hh"
 #include "sim/cur_tick.hh"
 #include "base/logging.hh"
+#include "base/trace.hh"
 
 namespace gem5
 {
