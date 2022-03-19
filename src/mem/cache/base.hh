@@ -1159,6 +1159,9 @@ class BaseCache : public ClockedObject
 
         /** For sparsity memory bandwidth **/
         statistics::Scalar sparsityMemoryBandwidth;
+
+
+        statistics::Scalar normalMemoryBandwidth;
     } stats;
 
     /** Registers probes. */
