@@ -77,7 +77,7 @@ BaseTags::findBlockBySetAndWay(int set, int way) const
 }
 
 Addr getOffset2(Addr addr) {
-    return addr & Addr(63)
+    return addr & Addr(63);
 }
 
 CacheBlk*
