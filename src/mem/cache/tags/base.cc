@@ -76,6 +76,10 @@ BaseTags::findBlockBySetAndWay(int set, int way) const
     return indexingPolicy->getEntry(set, way);
 }
 
+Addr getOffset2(Addr addr) {
+    return addr & Addr(63)
+}
+
 CacheBlk*
 BaseTags::findBlock(Addr addr, bool is_secure) const
 {
@@ -90,10 +94,11 @@ BaseTags::findBlock(Addr addr, bool is_secure) const
     for (const auto& location : entries) {
         CacheBlk* blk = static_cast<CacheBlk*>(location);
         if (blk->matchTag(tag, is_secure)) {
-            return blk;
+            if (blk->isInBlk(getOffset2(addr), 8, 1))
+                return blk;
         }
     }
-
+    
     // Did not find block
     return nullptr;
 }
