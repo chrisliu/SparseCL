@@ -1537,9 +1537,9 @@ BaseCache::handleFill(PacketPtr pkt, CacheBlk *blk, PacketList &writebacks,
 
     if (blk != nullptr && isSparse) {
         stats.sparsityMemoryBandwidth += pkt->getSize();
-        blk->setInBlk(pkt->getOffset(blkSize), pkt->getSize(), 1);
         DPRINTF(Cache, "Sparsity bit set. Offset: %s. Size: %s, blkSize: %s ",
             pkt->getOffset(blkSize), pkt->getSize(), blkSize);
+        blk->setInBlk(pkt->getOffset(blkSize), pkt->getSize(), 1);
     }
 
 
