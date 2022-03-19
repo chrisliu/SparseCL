@@ -1272,7 +1272,7 @@ BaseCache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
         }
 
         const bool has_old_data = blk && blk->isValid();
-        if (!blk) {
+        if (!blk || !blk->isInBlk(pkt->getOffset(blkSize), pkt->getSize(), 1)) {
             // need to do a replacement
             blk = allocateBlock(pkt, writebacks);
             if (!blk) {
