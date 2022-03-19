@@ -130,11 +130,11 @@ class BaseSetAssoc : public BaseTags
         
         if (!blk->isInBlk(pkt->getOffset(64), pkt->getSize(), 1)) {
             blk = nullptr;
-            stats.sparsityMisses++;
+            // stats.sparsityMisses++;
         }
-        else {
-            stats.sparsityAccess++;
-        }
+        // else {
+        //     stats.sparsityAccess++;
+        // }
 
         // Access all tags in parallel, hence one in each way.  The data side
         // either accesses all blocks in parallel, or one block sequentially on
