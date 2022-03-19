@@ -468,6 +468,8 @@ class CacheBlk : public TaggedEntry
     void setInBlk(const Addr offset, const int numBytes, const int bitSize) {
         int start = offset / bitSize;
         int end = start + numBytes / bitSize;
+        assert(start >= 0 && start <= 63)
+        assert(end >= 0 && end <= 63)
         for (int i = start; i < end; i++) {
             sparsityMask.set(i);
         }
