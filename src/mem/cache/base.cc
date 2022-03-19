@@ -1170,7 +1170,7 @@ BaseCache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
         DPRINTF(Cache, "Sparse cache miss. Offset - %s. Size - %s, blockSize - %s",
             pkt->getOffset(blkSize),
             pkt->getSize(),
-            blockSize);
+            blkSize);
         blk = blk->isInBlk(pkt->getOffset(blkSize), pkt->getSize(), 1)
           ? blk : nullptr;
         stats.sparsityAccess++;
