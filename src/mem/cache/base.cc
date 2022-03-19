@@ -1167,7 +1167,7 @@ BaseCache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
     
     blk = tags->accessBlock(pkt, tag_latency);
 
-    // if (blk != nullptr && isSparse) {
+    if (blk != nullptr && isSparse) {
     // //     DPRINTF(Cache, "Sparse cache miss. Offset - %s. Size - %s, blockSize - %s ",
     // //         pkt->getOffset(blkSize),
     // //         pkt->getSize(),
@@ -1182,7 +1182,12 @@ BaseCache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
     //     if (!blk->isInBlk(pkt->getOffset(blkSize), pkt->getSize(), 1)) {
     //         stats.sparsityMisses++;
     //     }
-    // }
+
+        if (!blk->isInBlk(pkt->getOffset(blkSize), pkt->getSize(), 1)) {
+            blk.invalidate();
+            blk = nullptr;
+        }
+    }
 
     DPRINTF(Cache, "%s for %s %s\n", __func__, pkt->print(),
             blk ? "hit " + blk->print() : "miss");
