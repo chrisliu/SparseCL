@@ -1184,7 +1184,7 @@ BaseCache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
     //     }
 
         if (!blk->isInBlk(pkt->getOffset(blkSize), pkt->getSize(), 1)) {
-            blk.invalidate();
+            blk->invalidate();
             blk = nullptr;
         }
     }
