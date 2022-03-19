@@ -153,7 +153,7 @@ class CacheBlk : public TaggedEntry
     std::list<Lock> lockList;
 
     /** Sparsity mask for sparse cache lines. */
-    std::bitset<64> sparsityMask;
+    std::bitset<1000> sparsityMask;
 
   public:
     CacheBlk()
@@ -468,8 +468,8 @@ class CacheBlk : public TaggedEntry
     void setInBlk(const Addr offset, const int numBytes, const int bitSize) {
         int start = offset / bitSize;
         int end = start + numBytes / bitSize;
-        assert(start >= 0 && start <= 63);
-        assert(end >= 0 && end <= 63);
+        // assert(start >= 0 && start <= 63);
+        // assert(end >= 0 && end <= 63);
         for (int i = start; i < end; i++) {
             sparsityMask.set(i);
         }

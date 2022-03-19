@@ -1167,7 +1167,7 @@ BaseCache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
     blk = tags->accessBlock(pkt, tag_latency);
 
     if (blk != nullptr && isSparse) {
-        DPRINTF(Cache, "Sparse cache miss. Offset - %s. Size - %s, blockSize - %s",
+        DPRINTF(Cache, "Sparse cache miss. Offset - %s. Size - %s, blockSize - %s ",
             pkt->getOffset(blkSize),
             pkt->getSize(),
             blkSize);
@@ -1538,7 +1538,7 @@ BaseCache::handleFill(PacketPtr pkt, CacheBlk *blk, PacketList &writebacks,
     if (blk != nullptr && isSparse) {
         stats.sparsityMemoryBandwidth += pkt->getSize();
         blk->setInBlk(pkt->getOffset(blkSize), pkt->getSize(), 1);
-        DPRINTF(Cache, "Sparsity bit set. Offset: %s. Size: %s, blkSize: %s",
+        DPRINTF(Cache, "Sparsity bit set. Offset: %s. Size: %s, blkSize: %s ",
             pkt->getOffset(blkSize), pkt->getSize(), blkSize);
     }
 
