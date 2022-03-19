@@ -61,6 +61,9 @@
 #include "sim/cur_tick.hh"
 #include "base/logging.hh"
 #include "base/trace.hh"
+#include "mem/cache/base.hh"
+#include "debug/Cache.hh"
+
 
 namespace gem5
 {
@@ -461,7 +464,7 @@ class CacheBlk : public TaggedEntry
     bool isInBlk(const Addr offset, const int numBytes, const int bitSize) {
         int start = offset / bitSize;
         int end = start + numBytes / bitSize;
-        DPRINTF(CacheBlk, "start: %s, end: %s ", start, end);
+        DPRINTF(Cache, "start: %s, end: %s ", start, end);
         for (int i = start; i < end; i++) {
             if (sparsityMask.test(i) == 0) return false;
         }
@@ -471,7 +474,7 @@ class CacheBlk : public TaggedEntry
     void setInBlk(const Addr offset, const int numBytes, const int bitSize) {
         int start = offset / bitSize;
         int end = start + numBytes / bitSize;
-        DPRINTF(CacheBlk, "start: %s, end: %s ", start, end);
+        DPRINTF(Cache, "start: %s, end: %s ", start, end);
         // assert(start >= 0 && start <= 63);
         // assert(end >= 0 && end <= 63);
         for (int i = start; i < end; i++) {
